@@ -10,7 +10,7 @@ class Application {
     static $map = array();
     static $defaultRoute = 'home';
     
-    static function bootstrapWithRoute($route) {
+    static function bootstrapWithRoute($route, $type = 'index.html') {
         
         if (self::$request == null)
             self::$request = new Request();
@@ -26,14 +26,14 @@ class Application {
         if (isset($acls::$map[$route])) {
             $cls = $acls::$map[$route];
             $rootViewController = new $cls();
-            echo $rootViewController->output();
+            echo $rootViewController->output($type);
             return;
-        } 
+        }
         
         if (isset($acls::$map['404'])) {
             $cls = $acls::$map['404'];
             $rootViewController = new $cls();
-            echo $rootViewController->output();
+            echo $rootViewController->output($type);
             return;
         }
         
@@ -46,7 +46,7 @@ class Application {
         
         self::$request = new Request();
         self::$c = new ApplicationConfig();
-        self::bootstrapWithRoute(self::$request->route);
+        self::bootstrapWithRoute(self::$request->route, self::$request->type);
         
     }
     

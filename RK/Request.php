@@ -60,11 +60,27 @@ class Request {
 	} else if ($name == 'f') {
 	    $this->f = new Conc();
 	    return $this->f;
-	} else if ($name='route') {
+	} else if ($name == 'route') {
             $this->segments;
             $segments = &$this->segments;
             $route = array_shift($segments);
+            $this->route = $route;
             return strtolower($route);
+        } else if ($name == 'type') {
+            
+            //Defaulting to index.html
+            $this->type = 'index.html';
+            
+            $end = end($this->segments);
+            if ($end == 'index.json') {
+                $this->type = array_pop($this->segments);
+            }
+            
+            if ($end == 'index.xml') {
+                $this->type = array_pop($this->segments);
+            }
+            
+            return $this->type;
         }
     }
 

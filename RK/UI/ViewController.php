@@ -49,12 +49,48 @@ class ViewController {
         $this->view = $view;
     }
     
-    public function toJSON() {
-        echo json_encode($this);
+    public function toArray() {
+        
+        $obj = get_public_object_vars($this);
+        
+        foreach($obj as $var=>$val) {
+            if ($val instanceof ViewController) {
+                $obj[$var] = $val->toArray();
+            }
+        }
+        
+        return $obj;
+        
     }
     
-    public function output() {
-        return $this->toHTML();
+    public function toJSON() {
+        
+        $vars = get_public_object_vars($this);
+        
+        foreach($vars as $vk=>$vv) {
+            if ($vv instanceof ViewController) {
+                $vars[$vk] = $vv->toArray();
+            }
+        }
+        
+        return json_encode($vars);
+        
+    }
+    
+    public function output($type=null) {
+        
+        if ($type == 'index.html') {
+            return $this->toHTML();
+        }
+        
+        if ($type == 'index.json') {
+            return $this->toJSON();
+        }
+        
+        if ($type == 'index.xml') {
+            return $this->toXML();
+        }
+            
     }
     
     public function trigger($event, $data) {
