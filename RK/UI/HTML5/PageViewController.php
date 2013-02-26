@@ -1,8 +1,8 @@
 <?php
 
-namespace RE\HTML5;
+namespace RE\UI\HTML5;
 
-class PageViewController extends \RE\ViewController {
+class PageViewController extends \RE\UI\ViewController {
     
     public $title = 'Default Title';
 

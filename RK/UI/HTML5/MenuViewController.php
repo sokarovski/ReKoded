@@ -1,8 +1,8 @@
 <?php
 
-namespace RE\HTML5;
+namespace RE\UI\HTML5;
 
-class MenuViewController extends \RE\ViewController {
+class MenuViewController extends \RE\UI\ViewController {
     
     public function __construct($parent) {
         parent::__construct($parent);

@@ -21,13 +21,19 @@ $timers = array('main' => microtime(true));
  * Checks if the libraries cache files exists for autoloder and includes it 
  * if does not exist it creates it and saves it
  */
-if (file_exists(APP.'/cache/libraries.php')) {
-    include(APP.'/cache/libraries.php');
+if (false && file_exists(APP.'/cache/libraries.php')) {
+    
+    include(APP.'/cache/repository.php');
+    
 } else {
-    include_once(CORE.'/LibraryBuilder.php');
-    $l = new LibraryBuilder();
-    $libraries = $l->buildAndSave();
+    
+    include_once(CORE.'/RepositoryBuilder.php');
+    
+    $l = new RE\RepositoryBuilder();
+    $__repository = $l->buildAndSave();
+    
     unset($l);
+    
 }
 
 /**
@@ -35,9 +41,13 @@ if (file_exists(APP.'/cache/libraries.php')) {
  * @param string $classname The class that needs to be autoloaded
  */
 function __autoload($classname) {
-    if (isset($GLOBALS['libraries'][$classname])) {
-	include_once($GLOBALS['libraries'][$classname]);
+    
+    if (isset($GLOBALS['__repository']['classes'][$classname])) {
+        
+	include_once($GLOBALS['__repository']['classes'][$classname]);
+        
     }
+    
 }
 
 /**

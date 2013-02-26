@@ -16,7 +16,7 @@ class Application {
             self::$request = new Request();
         
         if (self::$c == null)
-            self::$c = new \ApplicationConfig();
+            self::$c = new ApplicationConfig();
         
         $acls = get_called_class();
         
@@ -45,7 +45,7 @@ class Application {
     static function bootstrap() {
         
         self::$request = new Request();
-        self::$c = new \ApplicationConfig();
+        self::$c = new ApplicationConfig();
         self::bootstrapWithRoute(self::$request->route);
         
     }

@@ -36,7 +36,7 @@
 
     define('APP', 'App/');
     
-    define('CORE','Core/');
+    define('CORE','RK/');
 
     include CORE.'core.php';
 

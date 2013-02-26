@@ -1,6 +1,6 @@
 <?php
 
-class ShowArrayViewController extends RE\ViewController {
+class ShowArrayViewController extends RE\UI\ViewController {
      
     public $listTitle = 'MyList';
     public $listData = array(1,2,3);

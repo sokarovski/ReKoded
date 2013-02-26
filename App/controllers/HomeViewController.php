@@ -1,6 +1,6 @@
 <?php
 
-class HomeViewController extends RE\HTML5\PageViewController {
+class HomeViewController extends RE\UI\HTML5\PageViewController {
     
     /**
      *
@@ -17,9 +17,9 @@ class HomeViewController extends RE\HTML5\PageViewController {
     public function __construct() {
         
         $this->listen('title', array($this, 'handleTitle'));
-        $this->setView('HomeView');
+        $this->setView('Home');
         
-        $this->menu = new RE\HTML5\MenuViewController($this);
+        $this->menu = new RE\UI\HTML5\MenuViewController($this);
         $this->menu->addItem('List1', 'home');
         $this->menu->addItem('List2', 'home/arr/2/');
         

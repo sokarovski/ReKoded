@@ -1,6 +1,6 @@
 <?php 
 
-namespace RE;
+namespace RE\UI;
 
 class ViewController {
     
@@ -13,20 +13,36 @@ class ViewController {
     }
 
     public function toHTML() {
+        
         extract(get_public_object_vars($this));
+        
         ob_start();
-        if ($this->view != null) {
-            include(APP.'views/'.$this->view.'.php');
-        } else {
-            $cc = get_called_class();
-            $cc = explode('\\', $cc);
-            $____view = array_pop($cc);
-            unset($cc);
-            include(CORE.'HTML5/views/'.$____view.'.php');
+        
+        if ($this->view != null && isset($GLOBALS['__repository']['views'][$this->view.'.view.php'])) {
+
+            include($GLOBALS['__repository']['views'][$this->view.'.view.php']);
+            
+        } else if ( ($__view = $this->calledClassView()) ) {
+
+            include($__view);
+            
         }
+        
 	$content = ob_get_contents();
 	ob_get_clean(); 
+        
         return $content;
+        
+    }
+    
+    private function calledClassView() {
+        
+        $cc = get_called_class();
+        $cc = explode('\\', $cc);
+        $view = array_pop($cc).'.view.php';
+        
+        return isset($GLOBALS['__repository']['views'][$view]) ? $GLOBALS['__repository']['views'][$view] : false;
+        
     }
     
     public function setView($view) {

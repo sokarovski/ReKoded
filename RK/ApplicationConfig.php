@@ -7,6 +7,8 @@
  * paths and other information needed for the application to work properly
  */
 
+namespace RE;
+
 class ApplicationConfig {
 
     /**

@@ -7,19 +7,52 @@
  * Builds and caches list of libraries to be used in the autoloader
  * 
  */
-class LibraryBuilder {
 
-    /**
-     * Scans all folders for libraries and returns them as an array with the key
-     * representing the name of the library and tha value representing the path
-     * @return array The array with libraries 
-     */
-    private function build() {
-        $libraries = array_merge(
-                $this->scanDirectory(APP), 
-                $this->scanDirectory(CORE)
-        );
-        return $libraries;
+namespace RE;
+
+class RepositoryBuilder {
+    
+    
+    function buildAndSave() {
+        
+        $repository = $this->buildFileList();
+        $repository['classes'] = $this->extractClasses($repository['classes']);
+        
+        $output  = '<?php' . PHP_EOL;
+        $output .= $this->buildPhpArray('classes', $repository['classes']);
+        $output .= $this->buildPhpArray('views', $repository['views']);
+        
+        file_put_contents(APP . 'cache/repository.php', $output);
+        
+        return $repository;
+    }
+    
+    function buildPhpArray($repositoryName,$arr) {
+        
+        $str = '';
+        
+        $str = '$__repository[\''.$repositoryName.'\'] = array(' . PHP_EOL;
+        foreach ($arr as $ck => $cf) {
+            $str .= '	\'' . $ck . '\' => \'' . $cf . '\',' . PHP_EOL;
+        }
+        $str .= ');' . PHP_EOL;
+        
+        return $str;
+    }
+
+
+    private function buildFileList() {
+        
+        $files = array();
+        
+        $files['classes'] = array();
+        $files['views'] = array();
+        
+        $this->scanDirectory($files, APP);
+        $this->scanDirectory($files, CORE);
+        
+        return $files;
+        
     }
 
     private function getPhpClasses($phpcode) {
@@ -65,48 +98,42 @@ class LibraryBuilder {
         return $res;
     }
 
-    /**
-     * Saves the cache file with the libraries
-     * @return array The array with libraries
-     */
-    function buildAndSave() {
-        $arr = $this->build();
-        
-        $carr = $this->extractClasses($arr);
-
-        $str = '<?php' . PHP_EOL . '$libraries = array(' . PHP_EOL;
-        foreach ($carr as $ck => $cf) {
-            $str .= '	\'' . $ck . '\' => \'' . $cf . '\',' . PHP_EOL;
-        }
-        $str .= ');';
-        file_put_contents(APP . 'cache/libraries.php', $str);
-        return $carr;
-    }
+    
 
     /**
      * Scans a directory for libraries and returns them as an array
      * @param string $dir the directory that needs to be scanned
      * @return array the array with the libraries
      */
-    private function scanDirectory($dir) {
-        $arr = scandir($dir);
-        $rarr = array();
-        foreach ($arr as $f) {
+    private function scanDirectory(&$files, $dir) {
+        
+        $dir_files = scandir($dir);
+        
+        foreach ($dir_files as $file) {
 
-            if ($f{0} == '.') {
-                continue;
-            }
+            if ($file{0} == '.') continue;
 
-            if (is_dir($dir . $f)) {
-                $rarr += $this->scanDirectory($dir . $f . '/');
+            if (is_dir($dir . $file)) {
+                
+                $this->scanDirectory($files, $dir.$file.'/');
+               
             } else {
-                $fa = explode('.', $f);
-                if (count($fa) == 2 && array_pop($fa) == 'php') {
-                    $rarr[$dir . $f] = $dir . $f;
+                
+                $parts = explode('.', $file);
+                if (count($parts) >= 2 && array_pop($parts) == 'php') {
+                    
+                    if (array_pop($parts) == 'view') { 
+                        $files['views'][$file] = $dir . $file;
+                    } else {
+                        $files['classes'][] = $dir . $file;
+                    }
+                    $files[ array_pop($parts) == 'view' ? 'views':'classes'][] = $dir . $file;
+                    
                 }
+                
             }
         }
-        return $rarr;
+        
     }
 
 }

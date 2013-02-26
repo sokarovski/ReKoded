@@ -10,12 +10,15 @@
  *
  * @author psokarovski
  */
+
 class App extends RE\Application {
     
     static $defaultRoute = 'home';
     
     static $map = array(
+        
         'home' => 'HomeViewController'
+        
     );
     
 }
