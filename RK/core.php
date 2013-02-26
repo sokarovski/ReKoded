@@ -21,7 +21,7 @@ $timers = array('main' => microtime(true));
  * Checks if the libraries cache files exists for autoloder and includes it 
  * if does not exist it creates it and saves it
  */
-if (false && file_exists(APP.'/cache/libraries.php')) {
+if ( file_exists(APP.'/cache/libraries.php') ) {
     
     include(APP.'/cache/repository.php');
     
