@@ -22,6 +22,9 @@ class RepositoryBuilder {
         $output .= $this->buildPhpArray('classes', $repository['classes']);
         $output .= $this->buildPhpArray('views', $repository['views']);
         
+        if (!file_exists(APP . 'cache/'))
+            mkdir(APP.'cache/', 0777, true);
+        
         file_put_contents(APP . 'cache/repository.php', $output);
         
         return $repository;
